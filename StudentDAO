@@ -1,0 +1,87 @@
+import java.sql.*;
+import java.util.*;
+import a_project.Student;
+public class StudentDAO {
+
+    public static void addStudent(Student s) {
+        try {
+            Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO students VALUES (?, ?, ?)"
+            );
+
+            ps.setInt(1, s.id);
+            ps.setString(2, s.name);
+            ps.setInt(3, s.age);
+
+            ps.executeUpdate();
+            System.out.println("Student Added");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void viewStudents() {
+        try {
+            Connection con = DBConnection.getConnection();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM students");
+
+            while (rs.next()) {
+                System.out.println(
+                    rs.getInt(1) + " " +
+                    rs.getString(2) + " " +
+                    rs.getInt(3)
+                );
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+public static void updateStudent(int id, String newName, int newAge) {
+		    try {
+		        Connection con = DBConnection.getConnection();
+		        PreparedStatement ps = con.prepareStatement(
+		            "UPDATE students SET name=?, age=? WHERE id=?"
+		        );
+
+		        ps.setString(1, newName);
+		        ps.setInt(2, newAge);
+		        ps.setInt(3, id);
+
+		        int rows = ps.executeUpdate();
+
+		        if (rows > 0)
+		            System.out.println("Student Updated");
+		        else
+		            System.out.println("Student Not Found");
+
+		    } catch (Exception e) {
+		        System.out.println(e);
+		    }
+		}
+	 
+	 public static void deleteStudent(int id) {
+		    try {
+		        Connection con = DBConnection.getConnection();
+		        PreparedStatement ps = con.prepareStatement(
+		            "DELETE FROM students WHERE id=?"
+		        );
+
+		        ps.setInt(1, id);
+
+		        int rows = ps.executeUpdate();
+
+		        if (rows > 0)
+		            System.out.println("Student Deleted");
+		        else
+		            System.out.println("Student Not Found");
+
+		    } catch (Exception e) {
+		        System.out.println(e);
+		    }
+		}
+}
